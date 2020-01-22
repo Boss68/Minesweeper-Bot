@@ -4,6 +4,7 @@ import sys, PIL
 class MinesweeperWindow(QMainWindow):
     def __init__(self):
         super(QMainWindow,self).__init__()
+        self.gridsize=[10,10]
         self.m = QMenuBar(self)
         self.game = self.m.addMenu("Game")
         self.newGame = QAction("New",self)
@@ -39,7 +40,7 @@ class MinesweeperWindow(QMainWindow):
         self.game.addSeparator()
         self.game.addAction("Best Times...")
         self.game.addSeparator()
-        exit_ = QAction("Exit_",self)
+        exit_ = QAction("_Exit",self)
         self.game.addAction(exit_)
         help = self.m.addMenu("Help")
         contents=QAction("Contents",self)
@@ -47,7 +48,7 @@ class MinesweeperWindow(QMainWindow):
         help.addAction(contents)
         self.game.triggered[QAction].connect(self.buttonPressed)
         exit_.triggered.connect(sys.exit)
-        self.setGeometry(1280, 720, 200, 50)
+        self.move(1280,720)
         timer = QTimer(self)
         timer.timeout.connect(self.pygameLoop)
         timer.start(1)
@@ -55,19 +56,23 @@ class MinesweeperWindow(QMainWindow):
         self.show()
     def pygameLoop(self):
         global window
+        self.setFixedSize(*[i*16 for i in self.gridsize])
         mousePos = (QCursor.pos().x() - window.frameGeometry().topLeft().x(),
                     QCursor.pos().y() - window.frameGeometry().topLeft().y() - 23)
         # print(mousePos)
     def buttonPressed(self,action):
         if action.text() == "Beginner":
+            self.gridsize=[10,10]
             self.intermediate.setChecked(False)
             self.expert.setChecked(False)
             self.custom.setChecked(False)
         elif action.text() == "Intermediate":
+            self.gridsize=[16,16]
             self.beginner.setChecked(False)
             self.expert.setChecked(False)
             self.custom.setChecked(False)
         elif action.text() == "Expert":
+            self.gridsize=[30,16]
             self.beginner.setChecked(False)
             self.intermediate.setChecked(False)
             self.custom.setChecked(False)
